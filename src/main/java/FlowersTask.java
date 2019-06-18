@@ -9,9 +9,10 @@ public class FlowersTask {
 
     public static void main(String[] args) {
         //------------------------- INITIALIZE DATA BLOCK -------------------------
-
-        Map<Integer, Flower> stock = new Stock().create();
-        Map<Integer, Flower> bouquet = null;
+        Stock stock = new Stock();
+        Bouquet bouquet = new Bouquet();
+        Map<Integer, Flower> flowerStock = stock.create();
+        Map<Integer, Flower> bouquetStock = null;
         Scanner scan = new Scanner(System.in);
         String input;
         String[] array;
@@ -19,7 +20,7 @@ public class FlowersTask {
         //------------------------- PRINTING STOCK BLOCK -------------------------
 
         System.out.println("Welcome to flower shop.\nYour stock:");
-        new Stock().print(stock);
+        stock.print(flowerStock);
 
         //------------------------- EDITING STOCK BLOCK -------------------------
 
@@ -45,7 +46,7 @@ public class FlowersTask {
                 array = input.split(" ");
 
                 if (input.equals("stock")){
-                    new Stock().print(stock);
+                    stock.print(flowerStock);
                 }
                 else if (!input.equals("exit")){
                     if (!Stock.canEdit(array)){
@@ -53,7 +54,7 @@ public class FlowersTask {
                                 "\t{flower_name} {flower_price} {flower_quantity} [{flower_name} {flower_price} {flower_quantity} etc]");
                     }
                     else {
-                        Stock.edit(stock, array);
+                        Stock.edit(flowerStock, array);
                     }
                 }
             }
@@ -75,10 +76,10 @@ public class FlowersTask {
             input = scan.nextLine();
 
             if (input.equals("stock")){
-                new Stock().print(stock);
+                stock.print(flowerStock);
             }
             else if (input.equals("bouquet")){
-                if (Stock.isEmpty(stock)){
+                if (Stock.isEmpty(flowerStock)){
                     System.out.println("Please use \"update\" to fill stock");
                 } else{
                     System.out.println("Type \"stock\" to view current stock\n" +
@@ -90,15 +91,15 @@ public class FlowersTask {
                         array = input.split(" ");
 
                         if (input.equals("stock")) {
-                            new Stock().print(stock);
+                            stock.print(flowerStock);
                         } else if (!input.equals("exit")) {
-                            bouquet = new Bouquet().create();
+                            bouquetStock = bouquet.create();
                             if (!Bouquet.canCreate(array)){
                                 System.out.println("Please enter information for making bouquet correctly:\n" +
                                         "\t{flower_name} {flower_quantity} [{flower_name} {flower_quantity} etc]");
                             }
                             else{
-                                bouquet = Bouquet.fill(stock, bouquet, array);
+                                bouquetStock = Bouquet.fill(flowerStock, bouquetStock, array);
                             }
                         }
                     }
@@ -106,20 +107,20 @@ public class FlowersTask {
                 }
             }
                 else if (input.equals("mybouquet")) {
-                    if (bouquet != null){
-                        new Bouquet().print(bouquet);
-                        System.out.println("Bouquet cost: " + Bouquet.sell(bouquet) + "\n");
+                    if (bouquetStock != null){
+                        bouquet.print(bouquetStock);
+                        System.out.println("Bouquet cost: " + Bouquet.sell(bouquetStock) + "\n");
                     } else{
                         System.out.println("You haven't any bouquets\n");
                     }
             }
             else if (input.equals("update")) {
-                Stock.update(stock);
+                Stock.update(flowerStock);
             }
         }
         //------------------------- CLEARING ALL AFTER WORK -------------------------
-        new Stock().clear(stock);
-        new Bouquet().clear(bouquet);
+        stock.clear(flowerStock);
+        bouquet.clear(bouquetStock);
         scan.close();
 
     }

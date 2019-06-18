@@ -10,10 +10,10 @@ import java.util.Map;
 public class Stock implements Usable {
 
     public Map<Integer, Flower> create(){
-        Flower violet = new Violet();
-        Flower peony = new Peony();
-        Flower redRose = new RedRose();
-        Flower blueRose = new BlueRose();
+        Flower violet = new Flowers().violet();
+        Flower peony = new Flowers().peony();
+        Flower redRose = new Flowers().redRose();
+        Flower blueRose = new Flowers().blueRose();
         Map<Integer, Flower> stock = new HashMap<Integer, Flower>();
         stock.put(0, violet);
         stock.put(1, peony);
