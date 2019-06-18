@@ -16,7 +16,7 @@ public class Bouquet implements Usable {
         return  bouquet;
     }
 
-    public static boolean canCreate(String[] bouquetList){
+    public static boolean canFill(String[] bouquetList){
         int isInteger;
         if ((bouquetList.length % 2) != 0) return false;
         for (int i = 0; i < bouquetList.length; i += 2){

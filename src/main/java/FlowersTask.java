@@ -79,6 +79,7 @@ public class FlowersTask {
                 stock.print(flowerStock);
             }
             else if (input.equals("bouquet")){
+                bouquetStock = bouquet.create();
                 if (Stock.isEmpty(flowerStock)){
                     System.out.println("Please use \"update\" to fill stock");
                 } else{
@@ -93,8 +94,7 @@ public class FlowersTask {
                         if (input.equals("stock")) {
                             stock.print(flowerStock);
                         } else if (!input.equals("exit")) {
-                            bouquetStock = bouquet.create();
-                            if (!Bouquet.canCreate(array)){
+                            if (!Bouquet.canFill(array)){
                                 System.out.println("Please enter information for making bouquet correctly:\n" +
                                         "\t{flower_name} {flower_quantity} [{flower_name} {flower_quantity} etc]");
                             }
