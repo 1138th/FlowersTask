@@ -36,8 +36,6 @@ public class Flowers extends Flower{
 
     @Override
     public String toString() {
-        return (this.getName() + "\t" +
-                "price: " + this.getPrice() +
-                "quantity" + this.getQuantity());
+        return (String.format("%9s: %s %d, %s, %d", getName(), "price", getPrice(), "quantity", getQuantity()));
     }
 }
