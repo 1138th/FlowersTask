@@ -1,5 +1,7 @@
 package Stock;
 
+import Exceptions.FlowersPriceException;
+import Exceptions.FlowersQuantityException;
 import Flowers.*;
 import Utilities.FillValue;
 import Utilities.Usable;
@@ -30,14 +32,22 @@ public class Stock implements Usable {
                     editingParameters[i].equals("red-rose") || editingParameters[i].equals("blue-rose")))  return false;
             try {
                 isInteger = Integer.parseInt(editingParameters[i + 1]);
-                if (isInteger < 0) return false;
-            } catch (NumberFormatException e){
+                if (isInteger < 0) {
+                    System.out.println("Error: flowers' price is lower than 0");
+                    return false;
+                }
+            } catch (FlowersPriceException e){
+                System.out.println("Error: flowers' price is not integer");
                 return false;
             }
             try {
                 isInteger = Integer.parseInt(editingParameters[i + 2]);
-                if (isInteger < 0) return false;
-            } catch (NumberFormatException e){
+                if (isInteger < 0) {
+                    System.out.println("Error: flowers' quantity is lower than 0");
+                    return false;
+                }
+            } catch (FlowersQuantityException e){
+                System.out.println("Error: flowers' quantity is lower than 0");
                 return false;
             }
         }

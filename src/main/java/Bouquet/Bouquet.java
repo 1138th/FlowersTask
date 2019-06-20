@@ -1,5 +1,7 @@
 package Bouquet;
 
+import Exceptions.BouquetExistenceException;
+import Exceptions.FlowersQuantityException;
 import Flowers.*;
 import Stock.Stock;
 import Utilities.Usable;
@@ -25,7 +27,7 @@ public class Bouquet implements Usable {
             try {
                 isInteger = Integer.parseInt(bouquetList[i + 1]);
                 if (isInteger < 0) return false;
-            } catch (NumberFormatException e){
+            } catch (FlowersQuantityException e){
                 return false;
             }
         }
@@ -67,8 +69,11 @@ public class Bouquet implements Usable {
     public void clear(Map<Integer, Flower> bouquet){
         try {
             bouquet.clear();
-        } catch (Exception e){
+        } catch (BouquetExistenceException e){
             System.out.println("You had none bouquets.");
+        }
+        catch (NullPointerException e){
+            System.out.println("You had none bouquets. 2");
         }
     }
 }
