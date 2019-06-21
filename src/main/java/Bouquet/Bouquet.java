@@ -1,7 +1,6 @@
 package Bouquet;
 
-import Exceptions.BouquetExistenceException;
-import Exceptions.FlowersQuantityException;
+import Exceptions.FlowersNegativeIntegerException;
 import Flowers.*;
 import Stock.Stock;
 import Utilities.Usable;
@@ -10,9 +9,10 @@ import java.util.Map;
 
 public class Bouquet implements Usable {
 
-    public Map<Integer, Flower> create(){
+    public Map<Integer, Flower> create(Map<Integer, Flower> stock){
         Map<Integer, Flower> bouquet = new Stock().create();
         for (Map.Entry<Integer, Flower> item: bouquet.entrySet()) {
+            bouquet.get(item.getKey()).setPrice(stock.get(item.getKey()).getPrice());
             bouquet.get(item.getKey()).setQuantity(0);
         }
         return  bouquet;
@@ -26,9 +26,12 @@ public class Bouquet implements Usable {
                     bouquetList[i].equals("red-rose") || bouquetList[i].equals("blue-rose")))  return false;
             try {
                 isInteger = Integer.parseInt(bouquetList[i + 1]);
-                if (isInteger < 0) return false;
-            } catch (FlowersQuantityException e){
+            } catch (NumberFormatException e){
+                System.out.println("Flowers' quantity for bouquet is not integer");
                 return false;
+            }
+            if (isInteger < 0) {
+                throw new FlowersNegativeIntegerException();
             }
         }
         return true;
@@ -36,9 +39,10 @@ public class Bouquet implements Usable {
 
     public static Map<Integer, Flower> fill(Map<Integer, Flower> stock, Map<Integer, Flower> bouquet, String[] bouquetList) {
         Map<Integer, Flower> localBouquet = new Stock().create();
-        for (Map.Entry<Integer, Flower> item: localBouquet.entrySet()) {
+        localBouquet.putAll(bouquet);
+        /*for (Map.Entry<Integer, Flower> item: localBouquet.entrySet()) {
             localBouquet.get(item.getKey()).setQuantity(bouquet.get(item.getKey()).getQuantity());
-        }
+        }*/
         for (int i = 0; i < bouquetList.length; i += 2){
             for (Map.Entry<Integer, Flower> item: localBouquet.entrySet()) {
                 if (bouquetList[i].equals(item.getValue().getName())){
@@ -67,13 +71,9 @@ public class Bouquet implements Usable {
     }
 
     public void clear(Map<Integer, Flower> bouquet){
-        try {
-            bouquet.clear();
-        } catch (BouquetExistenceException e){
-            System.out.println("You had none bouquets.");
-        }
-        catch (NullPointerException e){
-            System.out.println("You had none bouquets. 2");
-        }
+        if (bouquet.isEmpty()) {
+            throw new NullPointerException();
+        } else bouquet.clear();
+
     }
 }

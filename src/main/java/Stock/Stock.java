@@ -1,7 +1,6 @@
 package Stock;
 
-import Exceptions.FlowersPriceException;
-import Exceptions.FlowersQuantityException;
+import Exceptions.FlowersNegativeIntegerException;
 import Flowers.*;
 import Utilities.FillValue;
 import Utilities.Usable;
@@ -24,31 +23,40 @@ public class Stock implements Usable {
         return  stock;
     }
 
-    public static boolean canEdit(String[] editingParameters){
+    public static boolean canEdit(String[] editingParameters) throws FlowersNegativeIntegerException{
         int isInteger;
         if ((editingParameters.length % 3) != 0) return false;
         for (int i = 0; i < editingParameters.length; i += 3){
+
+            //------------------------- CHECKING 1ST PARAMETER FOR FLOWER-NAME EQUALITY -------------------------
+
             if (!(editingParameters[i].equals("violet") || editingParameters[i].equals("peony") ||
                     editingParameters[i].equals("red-rose") || editingParameters[i].equals("blue-rose")))  return false;
+
+            //------------------------- CHECKING 2ND PARAMETER FOR -------------------------
+            //------------------------- CORRECTLY (POSITIVE INTEGER) -------------------------
+
             try {
                 isInteger = Integer.parseInt(editingParameters[i + 1]);
-                if (isInteger < 0) {
-                    System.out.println("Error: flowers' price is lower than 0");
-                    return false;
-                }
-            } catch (FlowersPriceException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Error: flowers' price is not integer");
                 return false;
             }
+            if (isInteger < 0) {
+                throw new FlowersNegativeIntegerException();
+            }
+
+            //------------------------- CHECKING 3RD PARAMETER FOR -------------------------
+            //------------------------- CORRECTLY (POSITIVE INTEGER) -------------------------
+
             try {
                 isInteger = Integer.parseInt(editingParameters[i + 2]);
-                if (isInteger < 0) {
-                    System.out.println("Error: flowers' quantity is lower than 0");
-                    return false;
-                }
-            } catch (FlowersQuantityException e){
-                System.out.println("Error: flowers' quantity is lower than 0");
+            } catch (NumberFormatException e){
+                System.out.println("Error: flowers' quantity is not integer");
                 return false;
+            }
+            if (isInteger < 0) {
+                throw new FlowersNegativeIntegerException();
             }
         }
         return true;

@@ -1,4 +1,5 @@
 import Bouquet.Bouquet;
+import Exceptions.FlowersNegativeIntegerException;
 import Flowers.*;
 import Stock.Stock;
 
@@ -49,12 +50,16 @@ public class FlowersTask {
                     stock.print(flowerStock);
                 }
                 else if (!input.equals("exit")){
-                    if (!Stock.canEdit(array)){
-                        System.out.println("Please enter information for editing stock correctly:\n" +
-                                "\t{flower_name} {flower_price} {flower_quantity} [{flower_name} {flower_price} {flower_quantity} etc]");
-                    }
-                    else {
-                        Stock.edit(flowerStock, array);
+                    try {
+                        if (!Stock.canEdit(array)){
+                            System.out.println("Please enter information for editing stock correctly:\n" +
+                                    "\t{flower_name} {flower_price} {flower_quantity} [{flower_name} {flower_price} {flower_quantity} etc]");
+                        }
+                        else {
+                            Stock.edit(flowerStock, array);
+                        }
+                    } catch (FlowersNegativeIntegerException e){
+                        System.out.println("Error: flowers' price or quantity is negative integer");
                     }
                 }
             }
@@ -79,7 +84,7 @@ public class FlowersTask {
                 stock.print(flowerStock);
             }
             else if (input.equals("bouquet")){
-                bouquetStock = bouquet.create();
+                bouquetStock = bouquet.create(flowerStock);
                 if (Stock.isEmpty(flowerStock)){
                     System.out.println("Please use \"update\" to fill stock");
                 } else{
@@ -94,12 +99,16 @@ public class FlowersTask {
                         if (input.equals("stock")) {
                             stock.print(flowerStock);
                         } else if (!input.equals("exit")) {
-                            if (!Bouquet.canFill(array)){
-                                System.out.println("Please enter information for making bouquet correctly:\n" +
-                                        "\t{flower_name} {flower_quantity} [{flower_name} {flower_quantity} etc]");
-                            }
-                            else{
-                                bouquetStock = Bouquet.fill(flowerStock, bouquetStock, array);
+                            try {
+                                if (!Bouquet.canFill(array)){
+                                    System.out.println("Please enter information for making bouquet correctly:\n" +
+                                            "\t{flower_name} {flower_quantity} [{flower_name} {flower_quantity} etc]");
+                                }
+                                else{
+                                    bouquetStock = Bouquet.fill(flowerStock, bouquetStock, array);
+                                }
+                            } catch (FlowersNegativeIntegerException e){
+                                System.out.println("Flowers' quantity for bouquet is negative integer");
                             }
                         }
                     }
@@ -120,7 +129,11 @@ public class FlowersTask {
         }
         //------------------------- CLEARING ALL AFTER WORK -------------------------
         stock.clear(flowerStock);
-        bouquet.clear(bouquetStock);
+        try {
+            bouquet.clear(bouquetStock);
+        } catch (NullPointerException e){
+            System.out.println("You had none bouquets.");
+        }
         scan.close();
 
     }
