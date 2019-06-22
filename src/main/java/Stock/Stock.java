@@ -7,8 +7,12 @@ import Utilities.Usable;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Stock implements Usable {
+
+    private static Logger logger = LogManager.getRootLogger();
 
     public Map<Integer, Flower> create(){
         Flower violet = new Flowers().violet();
@@ -25,21 +29,27 @@ public class Stock implements Usable {
 
     public static boolean canEdit(String[] editingParameters) throws FlowersNegativeIntegerException{
         int isInteger;
-        if ((editingParameters.length % 3) != 0) return false;
+        if ((editingParameters.length % 3) != 0) {
+            logger.error("number of parameters must be multiple of three");
+            return false;
+        }
         for (int i = 0; i < editingParameters.length; i += 3){
 
             //------------------------- CHECKING 1ST PARAMETER FOR FLOWER-NAME EQUALITY -------------------------
 
             if (!(editingParameters[i].equals("violet") || editingParameters[i].equals("peony") ||
-                    editingParameters[i].equals("red-rose") || editingParameters[i].equals("blue-rose")))  return false;
+                    editingParameters[i].equals("red-rose") || editingParameters[i].equals("blue-rose")))  {
+                logger.error("check stock to watch how to write flower name correctly");
+                return false;
+            }
 
             //------------------------- CHECKING 2ND PARAMETER FOR -------------------------
-            //------------------------- CORRECTLY (POSITIVE INTEGER) -------------------------
+            //------------------------- CORRECTNESS (POSITIVE INTEGER) -------------------------
 
             try {
                 isInteger = Integer.parseInt(editingParameters[i + 1]);
             } catch (NumberFormatException e) {
-                System.out.println("Error: flowers' price is not integer");
+                logger.error("flowers' price is not integer");
                 return false;
             }
             if (isInteger < 0) {
@@ -47,12 +57,12 @@ public class Stock implements Usable {
             }
 
             //------------------------- CHECKING 3RD PARAMETER FOR -------------------------
-            //------------------------- CORRECTLY (POSITIVE INTEGER) -------------------------
+            //------------------------- CORRECTNESS (POSITIVE INTEGER) -------------------------
 
             try {
                 isInteger = Integer.parseInt(editingParameters[i + 2]);
             } catch (NumberFormatException e){
-                System.out.println("Error: flowers' quantity is not integer");
+                logger.error("flowers' quantity is not integer");
                 return false;
             }
             if (isInteger < 0) {
@@ -75,7 +85,7 @@ public class Stock implements Usable {
                 if (editingParameters[i].equals(item.getValue().getName())){
                     stock.get(item.getKey()).setPrice(Integer.parseInt(editingParameters[i + 1]));
                     stock.get(item.getKey()).setQuantity(Integer.parseInt(editingParameters[i + 2]));
-                    System.out.println(item.getValue());
+                    logger.debug("item in stock has been edited: " + item.getValue());
                 }
             }
         }
@@ -90,15 +100,16 @@ public class Stock implements Usable {
 
     public static void update(Map<Integer, Flower> stock){
         int addingQuantity;
-        System.out.println("added:");
         for (Map.Entry<Integer, Flower> item: stock.entrySet()) {
             addingQuantity = FillValue.fillQuantity();
             stock.get(item.getKey()).setQuantity(item.getValue().getQuantity() + addingQuantity);
-            System.out.println("\t" + item.getValue().getName() + ": " + addingQuantity);
+            logger.info(item.getValue().getQuantity() + " item(s) \"" + item.getValue().getName() +
+                    "\" has been added to stock");
         }
     }
 
     public void clear(Map<Integer, Flower> stock){
         stock.clear();
+        logger.info("stock map has been cleared");
     }
 }

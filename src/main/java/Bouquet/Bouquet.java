@@ -6,8 +6,12 @@ import Stock.Stock;
 import Utilities.Usable;
 
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Bouquet implements Usable {
+
+    private static Logger logger = LogManager.getRootLogger();
 
     public Map<Integer, Flower> create(Map<Integer, Flower> stock){
         Map<Integer, Flower> bouquet = new Stock().create();
@@ -15,6 +19,7 @@ public class Bouquet implements Usable {
             bouquet.get(item.getKey()).setPrice(stock.get(item.getKey()).getPrice());
             bouquet.get(item.getKey()).setQuantity(0);
         }
+        logger.info("new bouquet creating initiated");
         return  bouquet;
     }
 
@@ -23,11 +28,14 @@ public class Bouquet implements Usable {
         if ((bouquetList.length % 2) != 0) return false;
         for (int i = 0; i < bouquetList.length; i += 2){
             if (!(bouquetList[i].equals("violet") || bouquetList[i].equals("peony") ||
-                    bouquetList[i].equals("red-rose") || bouquetList[i].equals("blue-rose")))  return false;
+                    bouquetList[i].equals("red-rose") || bouquetList[i].equals("blue-rose")))  {
+                logger.error("check stock to watch how to write flower name correctly");
+                return false;
+            }
             try {
                 isInteger = Integer.parseInt(bouquetList[i + 1]);
             } catch (NumberFormatException e){
-                System.out.println("Flowers' quantity for bouquet is not integer");
+                logger.error("flowers' quantity is not integer");
                 return false;
             }
             if (isInteger < 0) {
@@ -40,15 +48,14 @@ public class Bouquet implements Usable {
     public static Map<Integer, Flower> fill(Map<Integer, Flower> stock, Map<Integer, Flower> bouquet, String[] bouquetList) {
         Map<Integer, Flower> localBouquet = new Stock().create();
         localBouquet.putAll(bouquet);
-        /*for (Map.Entry<Integer, Flower> item: localBouquet.entrySet()) {
-            localBouquet.get(item.getKey()).setQuantity(bouquet.get(item.getKey()).getQuantity());
-        }*/
         for (int i = 0; i < bouquetList.length; i += 2){
             for (Map.Entry<Integer, Flower> item: localBouquet.entrySet()) {
                 if (bouquetList[i].equals(item.getValue().getName())){
                     localBouquet.get(item.getKey()).setQuantity(localBouquet.get(item.getKey()).getQuantity() +
                             Integer.parseInt(bouquetList[i + 1]));
                     stock.get(item.getKey()).setQuantity(stock.get(item.getKey()).getQuantity() - Integer.parseInt(bouquetList[i + 1]));
+                    logger.info(Integer.parseInt(bouquetList[i + 1]) + " item(s) \"" + item.getValue().getName() +
+                            "\" has been added to bouquet");
                 }
             }
         }
@@ -73,7 +80,10 @@ public class Bouquet implements Usable {
     public void clear(Map<Integer, Flower> bouquet){
         if (bouquet.isEmpty()) {
             throw new NullPointerException();
-        } else bouquet.clear();
+        } else {
+            bouquet.clear();
+            logger.info("bouquet map has been cleared");
+        }
 
     }
 }
